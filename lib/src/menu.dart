@@ -19,8 +19,11 @@ class KitMenuItem extends KitMenuEntry {
   final VoidCallback? onSelected;
   final bool danger;
   final bool checked;
+
+  /// A keyboard shortcut shown dimmed at the right edge, e.g. "Ctrl+C".
+  final String? shortcut;
   const KitMenuItem(this.label,
-      {required this.onSelected, this.danger = false, this.checked = false});
+      {required this.onSelected, this.danger = false, this.checked = false, this.shortcut});
 }
 
 class KitMenuDivider extends KitMenuEntry {
@@ -217,6 +220,13 @@ class _MenuRowState extends State<_MenuRow> {
                 child: item.checked ? Icon(Icons.check, size: 14, color: fg) : null,
               ),
               Expanded(child: Text(item.label, style: KitText.body(context).copyWith(color: fg))),
+              if (item.shortcut != null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 24),
+                  child: Text(item.shortcut!,
+                      style: KitText.body(context)
+                          .copyWith(color: active ? fg : (s.enabled ? c.textDim : c.borderStrong))),
+                ),
             ]),
           );
         },
