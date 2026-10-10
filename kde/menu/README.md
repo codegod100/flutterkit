@@ -5,7 +5,6 @@ Kickoff that opens from the panel or the Meta key.
 
 ![Flatkit Menu](preview.png)
 
-- A colour band that greets you by name and changes with the time of day
   (amber mornings, blue afternoons, violet evenings, indigo nights)
 - Favorites as a grid of colour tiles; every app keeps its own colour
 - All apps grouped under coloured letter badges

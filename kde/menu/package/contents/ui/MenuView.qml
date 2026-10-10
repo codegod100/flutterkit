@@ -1,7 +1,6 @@
 /*
- * The popup. A colour band greets you by name and changes with the time of
- * day; favorites are a grid of colour tiles, all apps are grouped under
- * coloured letter badges.
+ * The popup. A search field on top; favorites are a grid of colour tiles,
+ * all apps are grouped under coloured letter badges.
  *
  * Still flatkit underneath: Inter, flat fills, 1px borders that become a 2px
  * accent ring on focus, a solid accent selection, and no animation, so the
@@ -13,7 +12,6 @@ import QtQuick.Controls as QQC2
 
 import org.kde.plasma.plasmoid
 import org.kde.kirigami as Kirigami
-import org.kde.coreaddons as KCoreAddons
 import org.kde.plasma.plasma5support as P5Support
 
 Item {
@@ -131,28 +129,6 @@ Item {
     readonly property real fontSize: 14 * px
     readonly property real smallSize: 12 * px
 
-    KCoreAddons.KUser { id: kuser }
-    readonly property string firstName: {
-        const full = (kuser.fullName || "").trim();
-        return full.length > 0 ? full.split(" ")[0] : kuser.loginName;
-    }
-
-    // The time of day sets the greeting and the band's colour.
-    property date now: new Date()
-    Timer {
-        interval: 30000
-        repeat: true
-        running: root.menuItem.expanded
-        triggeredOnStart: true
-        onTriggered: root.now = new Date()
-    }
-    readonly property int hour: now.getHours()
-    readonly property var mood: hour < 5 ? { greet: i18n("Up late"), color: "#3b3f8f" }
-        : hour < 12 ? { greet: i18n("Good morning"), color: "#f08c00" }
-        : hour < 17 ? { greet: i18n("Good afternoon"), color: "#1c7ed6" }
-        : hour < 21 ? { greet: i18n("Good evening"), color: "#7048e8" }
-        : { greet: i18n("Good night"), color: "#3b3f8f" }
-
     // 0 favorites, 1 recent, 2 all applications.
     property int tab: Plasmoid.configuration.startTab
     readonly property bool searching: search.text.length > 0
@@ -242,73 +218,27 @@ Item {
         anchors.fill: parent
         spacing: 0
 
-        // The band: greeting, date, and the search field sitting on it.
-        Rectangle {
+        // The search field at the top.
+        Item {
             Layout.fillWidth: true
-            implicitHeight: bandColumn.implicitHeight + 28 * root.px
-            color: root.mood.color
-            topLeftRadius: root.radius
-            topRightRadius: root.radius
-            clip: true
-
-            // A few flat circles for some shape, in the band's own colour.
-            Rectangle {
-                width: 150 * root.px; height: width; radius: width / 2
-                x: parent.width - width * 0.55; y: -width * 0.45
-                color: Qt.lighter(root.mood.color, 1.18)
-            }
-            Rectangle {
-                width: 70 * root.px; height: width; radius: width / 2
-                x: parent.width - 175 * root.px; y: 34 * root.px
-                color: Qt.lighter(root.mood.color, 1.1)
-            }
+            implicitHeight: bandColumn.implicitHeight + 24 * root.px
 
             ColumnLayout {
                 id: bandColumn
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: parent.top
-                anchors.margins: 14 * root.px
-                spacing: 2 * root.px
-
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 8 * root.px
-
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 0
-
-                        Text {
-                            Layout.fillWidth: true
-                            text: root.firstName.length > 0 ? root.mood.greet + ", " + root.firstName
-                                : root.mood.greet
-                            color: "white"
-                            font.family: root.fontFamily
-                            font.pixelSize: 22 * root.px
-                            font.weight: Font.DemiBold
-                            elide: Text.ElideRight
-                        }
-
-                        Text {
-                            text: Qt.formatDateTime(root.now, "dddd, d MMMM · ") + Qt.formatTime(root.now, Qt.locale().timeFormat(Locale.ShortFormat))
-                            color: Qt.rgba(1, 1, 1, 0.85)
-                            font.family: root.fontFamily
-                            font.pixelSize: 13 * root.px
-                        }
-                    }
-
-                }
+                anchors.margins: 12 * root.px
+                spacing: 0
 
                 // Search field: KitTextField, a size up.
                 Rectangle {
                     Layout.fillWidth: true
-                    Layout.topMargin: 10 * root.px
                     implicitHeight: Math.round(40 * root.px)
                     radius: root.radius
                     color: root.cSurface
-                    border.width: search.activeFocus ? 2 : 0
-                    border.color: root.cFocus
+                    border.width: search.activeFocus ? 2 : 1
+                    border.color: search.activeFocus ? root.cFocus : root.cBorder
 
                     RowLayout {
                         anchors.fill: parent
