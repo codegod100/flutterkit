@@ -838,7 +838,7 @@ Item {
 
         Rectangle { Layout.fillWidth: true; implicitHeight: 1; color: root.cBorder }
 
-        // Footer: key hints, then session buttons from Plasma's system model.
+        // Footer: session buttons from Plasma's system model.
         RowLayout {
             Layout.fillWidth: true
             Layout.leftMargin: 12 * root.px
@@ -846,15 +846,7 @@ Item {
             implicitHeight: Math.round(40 * root.px)
             spacing: 2
 
-            Text {
-                Layout.fillWidth: true
-                text: root.searching ? i18n("↑↓ select   Enter open   → actions   Esc clear")
-                                     : i18n("Tab switch   Ctrl+R surprise   Esc close")
-                color: root.cTextDim
-                font.family: root.fontFamily
-                font.pixelSize: root.smallSize
-                elide: Text.ElideRight
-            }
+            Item { Layout.fillWidth: true }
 
             Repeater {
                 model: root.systemModel

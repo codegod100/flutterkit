@@ -13,7 +13,7 @@
         "Id": "dev.flatkit.menu",
         "License": "GPL-2.0-or-later",
         "Name": "Flatkit Menu",
-        "Version": "0.2.1",
+        "Version": "0.2.2",
         "Website": "https://github.com/codegod100/flutterkit"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
