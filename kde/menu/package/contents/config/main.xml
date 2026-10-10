@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <kcfgfile name=""/>
+  <group name="General">
+    <entry name="icon" type="String">
+      <default>start-here-kde-symbolic</default>
+    </entry>
+    <!-- Favorites seeded on first run; after that they live in KActivities. -->
+    <entry name="defaultFavorites" type="StringList">
+      <default>preferred://browser,preferred://filemanager,org.kde.konsole.desktop,org.kde.kate.desktop,systemsettings.desktop,org.kde.discover.desktop</default>
+    </entry>
+    <entry name="favoritesSeeded" type="Bool">
+      <default>false</default>
+    </entry>
+    <!-- Which tab opens when the query is empty: 0 favorites, 1 recent, 2 all. -->
+    <entry name="startTab" type="Int">
+      <default>0</default>
+    </entry>
+  </group>
+</kcfg>

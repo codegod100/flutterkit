@@ -65,6 +65,12 @@ Neither touches `dart:io` on the web, so apps using them still build with
 windows around a flatkit app look like part of it. See
 [kde/aurorae/README.md](kde/aurorae/README.md) to install them.
 
+## Plasma menu
+
+[kde/menu](kde/menu/README.md) is a Plasma 6 application menu in the kit's
+style, a drop-in replacement for Kickoff that opens with the Meta key.
+`kde/menu/install.sh` installs it.
+
 ## Launcher
 
 [launcher/](launcher/README.md) is a keyboard-driven application launcher

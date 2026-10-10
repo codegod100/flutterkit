@@ -1,0 +1,23 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "flatkit"
+            }
+        ],
+        "Category": "Application Launchers",
+        "Description": "A flat, keyboard-first application menu in the flatkit style",
+        "EnabledByDefault": true,
+        "Icon": "start-here-kde-symbolic",
+        "Id": "dev.flatkit.menu",
+        "License": "GPL-2.0-or-later",
+        "Name": "Flatkit Menu",
+        "Version": "0.1.0",
+        "Website": "https://github.com/codegod100/flutterkit"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-Plasma-Provides": [
+        "org.kde.plasma.launchermenu"
+    ]
+}
