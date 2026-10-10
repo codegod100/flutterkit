@@ -67,17 +67,9 @@ windows around a flatkit app look like part of it. See
 
 ## Plasma menu
 
-[kde/menu](kde/menu/README.md) is a Plasma 6 application menu in the kit's
-style, a drop-in replacement for Kickoff that opens with the Meta key.
-`kde/menu/install.sh` installs it.
-
-## Launcher
-
-[launcher/](launcher/README.md) is a keyboard-driven application launcher
-for KDE Plasma built with the kit: fuzzy search over installed apps, desktop
-actions, a calculator and a run-command fallback, in Plasma's colours and
-icon theme. `launcher/install.sh --meta` builds and installs it and puts it
-on the Meta key.
+Flatkit Menu, a Plasma 6 application menu in the kit's style that replaces
+Kickoff and opens with the Meta key, now lives in its own repository:
+https://gitlab.latha.org/nandi/flatkit-menu
 
 ## Using it with pixi
 
