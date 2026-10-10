@@ -1,4 +1,5 @@
 analyzer:
   exclude:
     - build/**
+    - launcher/**
 include: package:flutter_lints/flutter.yaml

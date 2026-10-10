@@ -65,6 +65,14 @@ Neither touches `dart:io` on the web, so apps using them still build with
 windows around a flatkit app look like part of it. See
 [kde/aurorae/README.md](kde/aurorae/README.md) to install them.
 
+## Launcher
+
+[launcher/](launcher/README.md) is a keyboard-driven application launcher
+for KDE Plasma built with the kit: fuzzy search over installed apps, desktop
+actions, a calculator and a run-command fallback, in Plasma's colours and
+icon theme. `launcher/install.sh --shortcut Meta+Space` builds and installs
+it.
+
 ## Using it with pixi
 
 flatkit builds as a conda package with pixi. Installing it puts the Dart
