@@ -14,6 +14,10 @@ Two themes: **Flatkit** (`KitColors.light`) and **Flatkit Dark**
 
 ## Install
 
+From Plasma: System Settings → Colors & Themes → Window Decorations →
+**Get New…**, search for Flatkit (once it is published on the KDE Store).
+
+
 From a checkout:
 
 ```sh
@@ -46,3 +50,9 @@ mirror `lib/src/theme.dart`) and run:
 python3 kde/aurorae/generate.py
 QT_QPA_PLATFORM=offscreen python3 kde/aurorae/preview.py   # needs PySide6
 ```
+
+## KDE Store
+
+`package.sh` builds one `.tar.gz` per theme into `store/`, next to a
+screenshot of each and the listing text. See [store/README.md](store/README.md)
+for the upload steps.

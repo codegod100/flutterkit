@@ -64,27 +64,38 @@ def window(p, theme, ox, oy, active, hover=None, content="#FFFFFF"):
     font.setWeight(QFont.Weight.DemiBold)
     p.setFont(font)
     p.drawText(QRectF(ox + PAD, by, W, TITLE), Qt.AlignmentFlag.AlignCenter,
-               "Flatkit" + ("" if active else " (inactive)"))
+               theme.name.replace("-", " ") + ("" if active else " (inactive)"))
+
+
+THEMES = [("Flatkit", "#E4E4E8", "#F6F6F7"), ("Flatkit-Dark", "#0E0E10", "#1C1C1F")]
+
+
+def render(themes, out):
+    """Draws each theme as a column: active window above, inactive below."""
+    cell_w, cell_h = W + 2 * PAD + 8, H + 2 * PAD + 8
+    img = QImage(len(themes) * cell_w + 16, 2 * cell_h + 16, QImage.Format.Format_ARGB32)
+    p = QPainter(img)
+    p.setRenderHint(QPainter.RenderHint.Antialiasing)
+    for col, (name, page, content) in enumerate(themes):
+        x = 8 + col * cell_w
+        last = col == len(themes) - 1
+        p.fillRect(QRectF(x - 8 if col == 0 else x, 0, cell_w + (16 if last else 8), img.height()), QColor(page))
+        theme = HERE / "themes" / name
+        window(p, theme, x, 8, True, hover="close", content=content)
+        window(p, theme, x, 8 + cell_h, False, hover="maximize", content=content)
+    p.end()
+    out.parent.mkdir(exist_ok=True)
+    img.save(str(out))
+    print("wrote", out)
 
 
 def main():
     app = QGuiApplication([])  # noqa: F841
     QFontDatabase.addApplicationFont(str(HERE.parent.parent / "fonts" / "Inter-SemiBold.ttf"))
-    cell_w, cell_h = W + 2 * PAD + 8, H + 2 * PAD + 8
-    img = QImage(2 * cell_w + 16, 2 * cell_h + 16, QImage.Format.Format_ARGB32)
-    p = QPainter(img)
-    p.setRenderHint(QPainter.RenderHint.Antialiasing)
-    for col, (name, page, content) in enumerate([
-        ("Flatkit", "#E4E4E8", "#F6F6F7"), ("Flatkit-Dark", "#0E0E10", "#1C1C1F"),
-    ]):
-        x = 8 + col * cell_w
-        p.fillRect(QRectF(x - 8 if col == 0 else x, 0, cell_w + 8, img.height()), QColor(page))
-        theme = HERE / "themes" / name
-        window(p, theme, x, 8, True, hover="close", content=content)
-        window(p, theme, x, 8 + cell_h, False, hover="maximize", content=content)
-    p.end()
-    img.save(str(HERE / "preview.png"))
-    print("wrote", HERE / "preview.png")
+    render(THEMES, HERE / "preview.png")
+    # One screenshot per theme for the KDE Store pages.
+    for t in THEMES:
+        render([t], HERE / "store" / f"{t[0]}.png")
 
 
 if __name__ == "__main__":
