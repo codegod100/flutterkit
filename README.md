@@ -5,8 +5,9 @@ press highlights that fade, and menus, dialogs and tooltips that appear and
 close in a single frame.
 
 - `KitButton` (primary, secondary, ghost, danger) and `KitIconButton`
+  (`.compact` for 24px in-row actions)
 - `KitSegmented` toggle tabs
-- `KitTextField`
+- `KitTextField`, with an optional focus node, text style and trailing widget
 - `KitMenu` popup menus and `KitSelect`, with arrow keys, Enter and Escape
 - `showKitDialog` and `KitDialog`
 - `KitTabs` underlined tab strip

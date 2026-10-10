@@ -5,9 +5,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'flatkit_test.dart' show host;
 
 Color? rowColor(WidgetTester tester, String text) {
-  final container = tester.widget<Container>(find
-      .ancestor(of: find.text(text), matching: find.byType(Container))
-      .first);
+  final container = tester.widget<Container>(
+      find.ancestor(of: find.text(text), matching: find.byType(Container)).first);
   return container.color;
 }
 
@@ -36,8 +35,7 @@ void main() {
           child: KitSelectionList(
             itemCount: 100,
             selectedIndex: selected,
-            itemBuilder: (context, i, sel) =>
-                KitListRow(selected: sel, child: Text('row $i')),
+            itemBuilder: (context, i, sel) => KitListRow(selected: sel, child: Text('row $i')),
           ),
         ));
     await tester.pumpWidget(list(0));
@@ -89,5 +87,30 @@ void main() {
     expect(find.text('Copied'), findsOneWidget);
     await tester.pump(const Duration(seconds: 3));
     expect(find.text('Copied'), findsNothing);
+  });
+
+  testWidgets('text field takes a focus node, style and trailing widget', (tester) async {
+    final controller = TextEditingController(text: 'numpy');
+    final focus = FocusNode();
+    await tester.pumpWidget(host(SizedBox(
+      width: 300,
+      child: KitTextField(
+        controller: controller,
+        focusNode: focus,
+        style: const TextStyle(fontFamily: 'monospace'),
+        trailing: KitIconButton.compact(Icons.clear, onPressed: controller.clear),
+      ),
+    )));
+    focus.requestFocus();
+    await tester.pump();
+    expect(focus.hasFocus, true);
+    expect(tester.widget<TextField>(find.byType(TextField)).style?.fontFamily, 'monospace');
+    expect(
+        tester.getSize(
+            find.ancestor(of: find.byIcon(Icons.clear), matching: find.byType(Container)).first),
+        const Size(24, 24));
+    await tester.tap(find.byIcon(Icons.clear));
+    expect(controller.text, '');
+    focus.dispose();
   });
 }

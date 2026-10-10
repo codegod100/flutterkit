@@ -195,6 +195,9 @@ class KitIconButton extends StatelessWidget {
   final double size;
   final Color? color;
 
+  /// Width and height of the square button.
+  final double extent;
+
   const KitIconButton(
     this.icon, {
     super.key,
@@ -202,7 +205,18 @@ class KitIconButton extends StatelessWidget {
     this.tooltip,
     this.size = 18,
     this.color,
+    this.extent = kitControlHeight,
   });
+
+  /// A 24px button with a 14px icon, for actions inside list rows.
+  const KitIconButton.compact(
+    this.icon, {
+    super.key,
+    required this.onPressed,
+    this.tooltip,
+    this.color,
+  })  : size = 14,
+        extent = 24;
 
   @override
   Widget build(BuildContext context) {
@@ -210,8 +224,8 @@ class KitIconButton extends StatelessWidget {
     final button = Pressable(
       onPressed: onPressed,
       builder: (context, s) => Container(
-        width: kitControlHeight,
-        height: kitControlHeight,
+        width: extent,
+        height: extent,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: s.pressed ? c.pressed : (s.hovered ? c.hover : const Color(0x00000000)),
@@ -287,6 +301,16 @@ class KitTextField extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
 
+  /// Focus for the field; one is made and owned by the field when null.
+  final FocusNode? focusNode;
+
+  /// Text style for what is typed and for the hint, merged over the body
+  /// style (for example a monospace family).
+  final TextStyle? style;
+
+  /// Shown at the end of the field, such as a clear button.
+  final Widget? trailing;
+
   const KitTextField({
     super.key,
     required this.controller,
@@ -296,6 +320,9 @@ class KitTextField extends StatefulWidget {
     this.error = false,
     this.onChanged,
     this.onSubmitted,
+    this.focusNode,
+    this.style,
+    this.trailing,
   });
 
   @override
@@ -303,17 +330,30 @@ class KitTextField extends StatefulWidget {
 }
 
 class _KitTextFieldState extends State<KitTextField> {
-  final _focus = FocusNode();
+  FocusNode? _own;
+  FocusNode get _focus => widget.focusNode ?? (_own ??= FocusNode());
+
+  void _changed() => setState(() {});
 
   @override
   void initState() {
     super.initState();
-    _focus.addListener(() => setState(() {}));
+    _focus.addListener(_changed);
+  }
+
+  @override
+  void didUpdateWidget(KitTextField old) {
+    super.didUpdateWidget(old);
+    if (old.focusNode != widget.focusNode) {
+      (old.focusNode ?? _own)?.removeListener(_changed);
+      _focus.addListener(_changed);
+    }
   }
 
   @override
   void dispose() {
-    _focus.dispose();
+    _focus.removeListener(_changed);
+    _own?.dispose();
     super.dispose();
   }
 
@@ -322,13 +362,14 @@ class _KitTextFieldState extends State<KitTextField> {
     final c = KitTheme.of(context);
     final focused = _focus.hasFocus;
     final border = widget.error ? c.danger : (focused ? c.focus : c.border);
+    final style = KitText.body(context).merge(widget.style);
     return GestureDetector(
       onTap: _focus.requestFocus,
       child: MouseRegion(
         cursor: SystemMouseCursors.text,
         child: Container(
           height: kitControlHeight + 2,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: EdgeInsets.only(left: 8, right: widget.trailing == null ? 8 : 3),
           decoration: BoxDecoration(
             color: c.surface,
             borderRadius: BorderRadius.circular(kitRadius),
@@ -344,20 +385,21 @@ class _KitTextFieldState extends State<KitTextField> {
                 controller: widget.controller,
                 focusNode: _focus,
                 autofocus: widget.autofocus,
-                style: KitText.body(context),
+                style: style,
                 cursorColor: c.accent,
                 cursorWidth: 1.5,
                 decoration: InputDecoration(
                   isCollapsed: true,
                   border: InputBorder.none,
                   hintText: widget.hint,
-                  hintStyle: KitText.body(context).copyWith(color: c.textDim),
+                  hintStyle: style.copyWith(color: c.textDim),
                   hintFadeDuration: Duration.zero,
                 ),
                 onChanged: widget.onChanged,
                 onSubmitted: widget.onSubmitted,
               ),
             ),
+            if (widget.trailing != null) widget.trailing!,
           ]),
         ),
       ),
