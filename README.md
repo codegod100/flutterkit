@@ -9,7 +9,13 @@ close in a single frame.
 - `KitTextField`
 - `KitMenu` popup menus and `KitSelect`, with arrow keys, Enter and Escape
 - `showKitDialog` and `KitDialog`
-- `KitTooltip`, `KitPanel`, `KitDivider`, `KitProgressBar`, `KitSpinner`
+- `KitTabs` underlined tab strip
+- `KitListRow` and `KitSelectionList`, keyboard-driven lists whose
+  selection jumps into view
+- `KitCheckbox`
+- `showKitToast`, a notice at the bottom of the window
+- `KitTooltip`, `KitPanel`, `KitDivider`, `KitVerticalDivider`,
+  `KitProgressBar`, `KitSpinner`
 - `Pressable`, the hover/press/focus primitive the rest are built on
 
 Colours come from `KitTheme` (`KitColors.light` and `KitColors.dark`).
@@ -46,6 +52,8 @@ KitSystemTheme(
 ```
 
 `KdeColors.read()` gives the Plasma colours directly (null off Plasma).
+Neither touches `dart:io` on the web, so apps using them still build with
+`flutter build web` (they just get the light/dark switch there).
 
 ## Using it with pixi
 

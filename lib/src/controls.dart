@@ -4,7 +4,7 @@
 library;
 
 import 'package:flutter/material.dart'
-    show CircularProgressIndicator, InputBorder, InputDecoration, TextField;
+    show CircularProgressIndicator, Icons, InputBorder, InputDecoration, TextField;
 import 'package:flutter/widgets.dart';
 
 import 'theme.dart';
@@ -174,8 +174,12 @@ class KitButton extends StatelessWidget {
               Icon(icon, size: 16, color: fg),
               const SizedBox(width: 6),
             ],
-            Text(label,
-                style: KitText.body(context).copyWith(color: fg, fontWeight: FontWeight.w500)),
+            Flexible(
+              child: Text(label,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: KitText.body(context).copyWith(color: fg, fontWeight: FontWeight.w500)),
+            ),
           ]),
         );
       },
@@ -396,6 +400,71 @@ class KitDivider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(height: 1, color: KitTheme.of(context).border);
+}
+
+class KitVerticalDivider extends StatelessWidget {
+  const KitVerticalDivider({super.key});
+
+  @override
+  Widget build(BuildContext context) => Container(width: 1, color: KitTheme.of(context).border);
+}
+
+/// A checkbox that flips on the spot, with an optional [label] that is
+/// part of the click target.
+class KitCheckbox extends StatelessWidget {
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+  final String? label;
+  final Widget? labelWidget;
+  final bool autofocus;
+
+  const KitCheckbox({
+    super.key,
+    required this.value,
+    required this.onChanged,
+    this.label,
+    this.labelWidget,
+    this.autofocus = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final c = KitTheme.of(context);
+    final text = labelWidget ?? (label == null ? null : Text(label!));
+    return Pressable(
+      onPressed: onChanged == null ? null : () => onChanged!(!value),
+      autofocus: autofocus,
+      builder: (context, s) {
+        final fill = !s.enabled
+            ? (value ? c.borderStrong : c.hover)
+            : value
+                ? (s.pressed ? c.accentPressed : (s.hovered ? c.accentHover : c.accent))
+                : (s.pressed ? c.pressed : (s.hovered ? c.hover : c.surface));
+        final border = s.focused ? c.focus : (value && s.enabled ? fill : c.borderStrong);
+        final box = Container(
+          width: 16,
+          height: 16,
+          decoration: BoxDecoration(
+            color: fill,
+            borderRadius: BorderRadius.circular(3),
+            border: Border.all(color: border, width: s.focused ? 2 : 1),
+          ),
+          child: value ? Icon(Icons.check, size: 12, color: c.onAccent) : null,
+        );
+        if (text == null) return box;
+        return Row(mainAxisSize: MainAxisSize.min, children: [
+          box,
+          const SizedBox(width: 8),
+          Flexible(
+            child: DefaultTextStyle.merge(
+              style: TextStyle(color: s.enabled ? c.text : c.textDim),
+              child: text,
+            ),
+          ),
+        ]);
+      },
+    );
+  }
 }
 
 /// A determinate progress bar that jumps straight to [value].

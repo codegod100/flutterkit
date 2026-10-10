@@ -3,10 +3,10 @@
 library;
 
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 
+import 'platform/kde_stub.dart' if (dart.library.io) 'platform/kde_io.dart';
 import 'theme.dart';
 
 /// Reads KDE's colour scheme from kdeglobals.
@@ -16,7 +16,7 @@ class KdeColors {
   /// Whether [environment] (the process environment by default) belongs to
   /// a Plasma session.
   static bool isKde([Map<String, String>? environment]) {
-    final env = environment ?? Platform.environment;
+    final env = environment ?? platformEnvironment();
     if (env['KDE_FULL_SESSION'] == 'true') return true;
     final desktops = (env['XDG_CURRENT_DESKTOP'] ?? '').toUpperCase().split(':');
     return desktops.contains('KDE');
@@ -24,7 +24,7 @@ class KdeColors {
 
   /// `$XDG_CONFIG_HOME/kdeglobals`, or `~/.config/kdeglobals`.
   static String? path([Map<String, String>? environment]) {
-    final env = environment ?? Platform.environment;
+    final env = environment ?? platformEnvironment();
     var config = env['XDG_CONFIG_HOME'] ?? '';
     if (config.isEmpty) {
       final home = env['HOME'] ?? '';
@@ -37,15 +37,12 @@ class KdeColors {
   /// The colours of the running Plasma session, or null when this isn't
   /// Plasma or kdeglobals has no colour scheme in it.
   static KitColors? read([Map<String, String>? environment]) {
-    if (!Platform.isLinux && environment == null) return null;
+    if (!platformIsLinux && environment == null) return null;
     if (!isKde(environment)) return null;
     final p = path(environment);
     if (p == null) return null;
-    try {
-      return parse(File(p).readAsStringSync());
-    } on FileSystemException {
-      return null;
-    }
+    final contents = readFile(p);
+    return contents == null ? null : parse(contents);
   }
 
   /// Maps the contents of a kdeglobals file onto [KitColors]. Returns null
@@ -193,7 +190,7 @@ class KitSystemTheme extends StatefulWidget {
 
 class _KitSystemThemeState extends State<KitSystemTheme> with WidgetsBindingObserver {
   KitColors? _kde;
-  StreamSubscription<FileSystemEvent>? _watch;
+  StreamSubscription<void>? _watch;
   Timer? _debounce;
 
   @override
@@ -216,25 +213,14 @@ class _KitSystemThemeState extends State<KitSystemTheme> with WidgetsBindingObse
     _kde = null;
     if (!widget.followKde) return;
     final env = widget.environment;
-    if (!(env != null || Platform.isLinux) || !KdeColors.isKde(env)) return;
+    if (!(env != null || platformIsLinux) || !KdeColors.isKde(env)) return;
     _kde = KdeColors.read(env);
     final path = KdeColors.path(env);
     if (path == null) return;
-    // KDE saves by writing a temporary file and renaming it over
-    // kdeglobals, so watch the directory rather than the file.
-    final file = File(path);
-    final dir = file.parent;
-    if (!dir.existsSync()) return;
-    try {
-      _watch = dir.watch().listen((e) {
-        final hit = e.path == file.path || (e is FileSystemMoveEvent && e.destination == file.path);
-        if (!hit) return;
-        _debounce?.cancel();
-        _debounce = Timer(const Duration(milliseconds: 150), _reload);
-      }, onError: (_) {});
-    } on FileSystemException {
-      // No inotify; colours just won't update live.
-    }
+    _watch = watchFile(path)?.listen((_) {
+      _debounce?.cancel();
+      _debounce = Timer(const Duration(milliseconds: 150), _reload);
+    });
   }
 
   void _reload() {
