@@ -73,10 +73,17 @@ PlasmoidItem {
 
     compactRepresentation: MouseArea {
         id: compact
+
+        // Fill the panel's thickness, as Kickoff's button does.
+        readonly property bool vertical: Plasmoid.formFactor === PlasmaCore.Types.Vertical
         hoverEnabled: true
         activeFocusOnTab: true
-        Layout.minimumWidth: Kirigami.Units.iconSizes.small
-        Layout.minimumHeight: Kirigami.Units.iconSizes.small
+        Layout.minimumWidth: vertical ? Kirigami.Units.iconSizes.small : height
+        Layout.minimumHeight: vertical ? width : Kirigami.Units.iconSizes.small
+        Layout.preferredWidth: vertical ? -1 : height
+        Layout.preferredHeight: vertical ? width : -1
+        Layout.maximumWidth: vertical ? Infinity : height
+        Layout.maximumHeight: vertical ? width : Infinity
         onClicked: menu.expanded = !menu.expanded
         Keys.onReturnPressed: menu.expanded = !menu.expanded
         Keys.onSpacePressed: menu.expanded = !menu.expanded

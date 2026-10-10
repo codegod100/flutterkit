@@ -5,6 +5,11 @@ Kickoff that opens from the panel or the Meta key.
 
 ![Flatkit Menu](preview.png)
 
+- A colour band that greets you by name and changes with the time of day
+  (amber mornings, blue afternoons, violet evenings, indigo nights)
+- Favorites as a grid of colour tiles; every app keeps its own colour
+- All apps grouped under coloured letter badges
+- A dice button (Ctrl+R) that picks a random app for you to try
 - One search field over KRunner: apps, System Settings pages, the
   calculator, files and commands, the same results KRunner gives
 - Favorites, Recent and All apps behind a flat segmented switch; favorites
@@ -15,7 +20,9 @@ Kickoff that opens from the panel or the Meta key.
 - flatkit's look: Inter, 6px radii, 1px borders that become a 2px accent
   ring on focus, a solid accent selection, and nothing that fades or slides.
   Colours come from your Plasma colour scheme, mapped the way flatkit's
-  `KdeColors` maps them
+  `KdeColors` maps them, and the accent is read straight from `kdeglobals`
+  so it is the one you picked in System Settings even when the Plasma
+  style has its own highlight colour
 
 | Key | Does |
 | --- | --- |
@@ -24,7 +31,9 @@ Kickoff that opens from the panel or the Meta key.
 | Page Up/Down | Move by a page |
 | Enter | Open |
 | Alt+1 … Alt+9 | Open that row |
+| ← → | Move across the favorites grid |
 | Tab, Shift+Tab | Switch Favorites / Recent / All apps |
+| Ctrl+R | Roll the dice |
 | →, Menu | The selection's actions |
 | Esc | Clear the search, then close |
 
