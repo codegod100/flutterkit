@@ -27,6 +27,26 @@ MaterialApp(
 );
 ```
 
+### Following the desktop theme
+
+`KitSystemTheme` picks the colours for you: on KDE Plasma it reads the
+colour scheme and accent colour from `kdeglobals` and updates live when you
+change them in System Settings; elsewhere it switches between
+`KitColors.light` and `KitColors.dark` with the desktop's dark mode.
+
+```dart
+KitSystemTheme(
+  builder: (context, colors) => MaterialApp(
+    theme: KitTheme.material(colors),
+    builder: (context, child) =>
+        Material(color: colors.background, child: child),
+    home: ...,
+  ),
+);
+```
+
+`KdeColors.read()` gives the Plasma colours directly (null off Plasma).
+
 ## Using it with pixi
 
 flatkit builds as a conda package with pixi. Installing it puts the Dart
