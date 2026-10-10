@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Flatkit Dark
+Comment=Flat window decoration matching the flatkit Flutter widgets (dark)
+X-KDE-PluginInfo-Author=codegod100
+X-KDE-PluginInfo-Name=Flatkit-Dark
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=https://github.com/codegod100/flutterkit
+X-KDE-PluginInfo-Category=
+X-KDE-PluginInfo-License=MIT
+X-KDE-PluginInfo-EnabledByDefault=true
+X-Plasma-API=javascript
+X-KDE-ServiceTypes=KWin/Decoration

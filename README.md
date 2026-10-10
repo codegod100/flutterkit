@@ -59,6 +59,12 @@ KitSystemTheme(
 Neither touches `dart:io` on the web, so apps using them still build with
 `flutter build web` (they just get the light/dark switch there).
 
+### Matching window decorations
+
+`kde/aurorae` has KWin title bars in the same style, light and dark, so
+windows around a flatkit app look like part of it. See
+[kde/aurorae/README.md](kde/aurorae/README.md) to install them.
+
 ## Using it with pixi
 
 flatkit builds as a conda package with pixi. Installing it puts the Dart
