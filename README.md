@@ -70,8 +70,8 @@ windows around a flatkit app look like part of it. See
 [launcher/](launcher/README.md) is a keyboard-driven application launcher
 for KDE Plasma built with the kit: fuzzy search over installed apps, desktop
 actions, a calculator and a run-command fallback, in Plasma's colours and
-icon theme. `launcher/install.sh --shortcut Meta+Space` builds and installs
-it.
+icon theme. `launcher/install.sh --meta` builds and installs it and puts it
+on the Meta key.
 
 ## Using it with pixi
 

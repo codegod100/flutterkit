@@ -29,6 +29,8 @@ struct _MyApplication {
   gboolean had_focus;
   // Pending check after a focus-out, see focus_out_cb.
   guint focus_check;
+  // Registration of the dev.flatkit.Launcher D-Bus object.
+  guint dbus_object;
 };
 
 G_DEFINE_TYPE(MyApplication, my_application, GTK_TYPE_APPLICATION)
@@ -234,6 +236,62 @@ static gboolean my_application_local_command_line(GApplication* application, gch
   return TRUE;
 }
 
+// A D-Bus method with no arguments, so KWin can call it straight from a
+// modifier-only shortcut (pressing Meta on its own):
+//   kwinrc [ModifierOnlyShortcuts] Meta=dev.flatkit.Launcher,/dev/flatkit/Launcher,dev.flatkit.Launcher,Toggle
+// GApplication's own Activate methods take a platform-data argument that
+// KWin can't pass.
+static const char kIntrospection[] =
+    "<node>"
+    "  <interface name='dev.flatkit.Launcher'>"
+    "    <method name='Toggle'/>"
+    "  </interface>"
+    "</node>";
+
+static void dbus_method_cb(GDBusConnection* connection, const gchar* sender,
+                           const gchar* object_path, const gchar* interface_name,
+                           const gchar* method_name, GVariant* parameters,
+                           GDBusMethodInvocation* invocation, gpointer user_data) {
+  if (g_strcmp0(method_name, "Toggle") == 0) {
+    g_application_activate(G_APPLICATION(user_data));
+    g_dbus_method_invocation_return_value(invocation, nullptr);
+  } else {
+    g_dbus_method_invocation_return_dbus_error(invocation, "org.freedesktop.DBus.Error.UnknownMethod",
+                                               "Unknown method");
+  }
+}
+
+static const GDBusInterfaceVTable kVtable = {dbus_method_cb, nullptr, nullptr, {nullptr}};
+
+// Implements GApplication::dbus_register.
+static gboolean my_application_dbus_register(GApplication* application,
+                                             GDBusConnection* connection,
+                                             const gchar* object_path, GError** error) {
+  MyApplication* self = MY_APPLICATION(application);
+  if (!G_APPLICATION_CLASS(my_application_parent_class)
+           ->dbus_register(application, connection, object_path, error)) {
+    return FALSE;
+  }
+  g_autoptr(GDBusNodeInfo) info = g_dbus_node_info_new_for_xml(kIntrospection, error);
+  if (info == nullptr) return FALSE;
+  self->dbus_object = g_dbus_connection_register_object(
+      connection, object_path, info->interfaces[0], &kVtable, self, nullptr, error);
+  return self->dbus_object != 0;
+}
+
+// Implements GApplication::dbus_unregister.
+static void my_application_dbus_unregister(GApplication* application,
+                                           GDBusConnection* connection,
+                                           const gchar* object_path) {
+  MyApplication* self = MY_APPLICATION(application);
+  if (self->dbus_object != 0) {
+    g_dbus_connection_unregister_object(connection, self->dbus_object);
+    self->dbus_object = 0;
+  }
+  G_APPLICATION_CLASS(my_application_parent_class)
+      ->dbus_unregister(application, connection, object_path);
+}
+
 static void quit_activated(GSimpleAction* action, GVariant* parameter, gpointer user_data) {
   g_application_quit(G_APPLICATION(user_data));
 }
@@ -266,6 +324,8 @@ static void my_application_class_init(MyApplicationClass* klass) {
   G_APPLICATION_CLASS(klass)->local_command_line = my_application_local_command_line;
   G_APPLICATION_CLASS(klass)->startup = my_application_startup;
   G_APPLICATION_CLASS(klass)->shutdown = my_application_shutdown;
+  G_APPLICATION_CLASS(klass)->dbus_register = my_application_dbus_register;
+  G_APPLICATION_CLASS(klass)->dbus_unregister = my_application_dbus_unregister;
   G_OBJECT_CLASS(klass)->dispose = my_application_dispose;
 }
 

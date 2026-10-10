@@ -37,22 +37,35 @@ Wayland overlay, see below).
 
 ```sh
 cd launcher
-./install.sh --shortcut Meta+Space
+./install.sh --meta
 ```
 
 This builds a release, installs it under `~/.local`, adds it to autostart
-(started hidden) and binds the shortcut. Log out and in once for the
-shortcut to register, or bind one yourself in System Settings → Keyboard →
-Shortcuts → Add New → Application → "Launcher". KRunner uses Alt+Space by
-default; pick another key if you keep KRunner.
+(started hidden) and makes the Meta (Windows) key, pressed on its own, open
+the launcher instead of Plasma's application menu. It takes effect at once.
+KWin calls the launcher's `dev.flatkit.Launcher.Toggle` D-Bus method for
+this, set in `kwinrc`:
 
-`./install.sh --uninstall` removes it all again.
+```ini
+[ModifierOnlyShortcuts]
+Meta=dev.flatkit.Launcher,/dev/flatkit/Launcher,dev.flatkit.Launcher,Toggle
+```
+
+A D-Bus service file starts the launcher on demand if it isn't running yet.
+
+To use a key combination instead, `./install.sh --shortcut Meta+Space` (log
+out and in once for it to register), or bind one in System Settings →
+Keyboard → Shortcuts → Add New → Application → "Launcher".
+
+`./install.sh --uninstall` removes it all again and gives the Meta key back
+to Plasma's menu.
 
 ## How it runs
 
 The first `flatkit-launcher` starts the app and shows the window. Running
 it again (which is what the shortcut does) toggles the window of the copy
-already running, over D-Bus. Flags:
+already running, over D-Bus, as does calling
+`dev.flatkit.Launcher.Toggle` on `/dev/flatkit/Launcher`. Flags:
 
 - `--hidden`: start without showing the window (used by autostart)
 - `--quit`: stop the running copy
