@@ -45,8 +45,19 @@ if [ -n "$kread" ] && [ -n "$kwrite" ] &&
 fi
 
 if [ -n "$updated" ]; then
-  echo "Updated. Restart Plasma to load the new version:"
-  echo "  systemctl --user restart plasma-plasmashell"
+  # Plasma keeps compiled QML around; drop it so the new files are what
+  # loads, then restart the shell.
+  rm -rf "${XDG_CACHE_HOME:-$HOME/.cache}/plasmashell/qmlcache"
+  if systemctl --user restart plasma-plasmashell 2>/dev/null; then
+    echo "Updated and restarted Plasma."
+  elif command -v kquitapp6 >/dev/null && command -v kstart >/dev/null; then
+    kquitapp6 plasmashell >/dev/null 2>&1 || true
+    kstart plasmashell >/dev/null 2>&1 || true
+    echo "Updated and restarted Plasma."
+  else
+    echo "Updated. Log out and back in to load the new version."
+  fi
+  echo "Installed version: $(sed -n 's/.*"Version": "\(.*\)".*/\1/p' package/metadata.json)"
 else
   echo "Installed. Right-click your application menu → Show Alternatives… → Flatkit Menu."
 fi
