@@ -1,7 +1,7 @@
 /*
  * The popup. A colour band greets you by name and changes with the time of
  * day; favorites are a grid of colour tiles, all apps are grouped under
- * coloured letter badges, and the dice picks something to try.
+ * coloured letter badges.
  *
  * Still flatkit underneath: Inter, flat fills, 1px borders that become a 2px
  * accent ring on focus, a solid accent selection, and no animation, so the
@@ -153,9 +153,6 @@ Item {
         : hour < 21 ? { greet: i18n("Good evening"), color: "#7048e8" }
         : { greet: i18n("Good night"), color: "#3b3f8f" }
 
-    // Set by the dice; shown in the band until the next search or switch.
-    property string suggestion: ""
-
     // 0 favorites, 1 recent, 2 all applications.
     property int tab: Plasmoid.configuration.startTab
     readonly property bool searching: search.text.length > 0
@@ -179,7 +176,6 @@ Item {
         accentReader.refresh();
         actions.close();
         search.text = "";
-        suggestion = "";
         tab = Plasmoid.configuration.startTab;
         list.currentIndex = 0;
         grid.currentIndex = 0;
@@ -201,21 +197,6 @@ Item {
         }
         currentModel.trigger(index, "", null);
         menuItem.expanded = false;
-    }
-
-    // The dice: jump to a random app in All apps and say what it is.
-    function rollDice() {
-        const apps = allAppsModel;
-        if (!apps || apps.count === 0) {
-            return;
-        }
-        search.text = "";
-        tab = 2;
-        const i = Math.floor(Math.random() * apps.count);
-        list.currentIndex = i;
-        list.positionViewAtIndex(i, ListView.Center);
-        suggestion = apps.labelForRow(i);
-        search.forceActiveFocus();
     }
 
     function openActions(index) {
@@ -245,7 +226,6 @@ Item {
 
     onSearchingChanged: {
         view.currentIndex = 0;
-        suggestion = "";
     }
     onTabChanged: {
         list.currentIndex = 0;
@@ -262,7 +242,7 @@ Item {
         anchors.fill: parent
         spacing: 0
 
-        // The band: greeting, date, dice, and the search field sitting on it.
+        // The band: greeting, date, and the search field sitting on it.
         Rectangle {
             Layout.fillWidth: true
             implicitHeight: bandColumn.implicitHeight + 28 * root.px
@@ -301,8 +281,7 @@ Item {
 
                         Text {
                             Layout.fillWidth: true
-                            text: root.suggestion.length > 0 ? i18n("How about %1?", root.suggestion)
-                                : root.firstName.length > 0 ? root.mood.greet + ", " + root.firstName
+                            text: root.firstName.length > 0 ? root.mood.greet + ", " + root.firstName
                                 : root.mood.greet
                             color: "white"
                             font.family: root.fontFamily
@@ -312,47 +291,13 @@ Item {
                         }
 
                         Text {
-                            text: root.suggestion.length > 0 ? i18n("Press Enter to open it, or roll again")
-                                : Qt.formatDateTime(root.now, "dddd, d MMMM · ") + Qt.formatTime(root.now, Qt.locale().timeFormat(Locale.ShortFormat))
+                            text: Qt.formatDateTime(root.now, "dddd, d MMMM · ") + Qt.formatTime(root.now, Qt.locale().timeFormat(Locale.ShortFormat))
                             color: Qt.rgba(1, 1, 1, 0.85)
                             font.family: root.fontFamily
                             font.pixelSize: 13 * root.px
                         }
                     }
 
-                    // The dice.
-                    Rectangle {
-                        implicitWidth: Math.round(40 * root.px)
-                        implicitHeight: implicitWidth
-                        radius: root.radius
-                        color: diceMouse.pressed ? Qt.rgba(1, 1, 1, 0.35) : (diceMouse.containsMouse ? Qt.rgba(1, 1, 1, 0.25) : Qt.rgba(1, 1, 1, 0.16))
-
-                        // Five pips, drawn flat.
-                        Grid {
-                            anchors.centerIn: parent
-                            columns: 3
-                            spacing: 3 * root.px
-                            Repeater {
-                                model: [1, 0, 1, 0, 1, 0, 1, 0, 1]
-                                Rectangle {
-                                    required property int modelData
-                                    width: 5 * root.px; height: width; radius: width / 2
-                                    color: modelData ? "white" : "transparent"
-                                }
-                            }
-                        }
-
-                        MouseArea {
-                            id: diceMouse
-                            anchors.fill: parent
-                            hoverEnabled: true
-                            onClicked: root.rollDice()
-                        }
-
-                        QQC2.ToolTip.visible: diceMouse.containsMouse
-                        QQC2.ToolTip.text: i18n("Surprise me (Ctrl+R)")
-                        QQC2.ToolTip.delay: 0
-                    }
                 }
 
                 // Search field: KitTextField, a size up.
@@ -430,8 +375,6 @@ Item {
                                     } else {
                                         root.menuItem.expanded = false;
                                     }
-                                } else if (ctrl && event.key === Qt.Key_R) {
-                                    root.rollDice();
                                 } else if (event.key === Qt.Key_Tab && !root.searching) {
                                     root.tab = (root.tab + 1) % 3;
                                 } else if (event.key === Qt.Key_Backtab && !root.searching) {

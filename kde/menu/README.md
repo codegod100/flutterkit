@@ -9,7 +9,6 @@ Kickoff that opens from the panel or the Meta key.
   (amber mornings, blue afternoons, violet evenings, indigo nights)
 - Favorites as a grid of colour tiles; every app keeps its own colour
 - All apps grouped under coloured letter badges
-- A dice button (Ctrl+R) that picks a random app for you to try
 - One search field over KRunner: apps, System Settings pages, the
   calculator, files and commands, the same results KRunner gives
 - Favorites, Recent and All apps behind a flat segmented switch; favorites
@@ -33,7 +32,6 @@ Kickoff that opens from the panel or the Meta key.
 | Alt+1 … Alt+9 | Open that row |
 | ← → | Move across the favorites grid |
 | Tab, Shift+Tab | Switch Favorites / Recent / All apps |
-| Ctrl+R | Roll the dice |
 | →, Menu | The selection's actions |
 | Esc | Clear the search, then close |
 
