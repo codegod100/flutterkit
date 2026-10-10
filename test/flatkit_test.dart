@@ -192,6 +192,21 @@ void main() {
     expect(submitted, 'krita');
   });
 
+  testWidgets('text field hides passwords and can be disabled', (tester) async {
+    final controller = TextEditingController();
+    await tester.pumpWidget(host(SizedBox(
+      width: 200,
+      child: Column(children: [
+        KitTextField(controller: controller, obscureText: true),
+        KitTextField(controller: TextEditingController(text: 'locked'), enabled: false),
+      ]),
+    )));
+    final fields = tester.widgetList<TextField>(find.byType(TextField)).toList();
+    expect(fields[0].obscureText, isTrue);
+    expect(fields[0].enabled, isTrue);
+    expect(fields[1].enabled, isFalse);
+  });
+
   testWidgets('tooltip shows after hovering, without a fade', (tester) async {
     await tester.pumpWidget(host(const KitTooltip(message: 'Hello', child: Text('Target'))));
     final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);

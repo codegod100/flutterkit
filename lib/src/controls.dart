@@ -311,6 +311,12 @@ class KitTextField extends StatefulWidget {
   /// Shown at the end of the field, such as a clear button.
   final Widget? trailing;
 
+  /// Hides what is typed, for passwords.
+  final bool obscureText;
+
+  /// When false the field shows its text but can't be focused or edited.
+  final bool enabled;
+
   const KitTextField({
     super.key,
     required this.controller,
@@ -323,6 +329,8 @@ class KitTextField extends StatefulWidget {
     this.focusNode,
     this.style,
     this.trailing,
+    this.obscureText = false,
+    this.enabled = true,
   });
 
   @override
@@ -385,7 +393,9 @@ class _KitTextFieldState extends State<KitTextField> {
                 controller: widget.controller,
                 focusNode: _focus,
                 autofocus: widget.autofocus,
-                style: style,
+                obscureText: widget.obscureText,
+                enabled: widget.enabled,
+                style: widget.enabled ? style : style.copyWith(color: c.textDim),
                 cursorColor: c.accent,
                 cursorWidth: 1.5,
                 decoration: InputDecoration(
