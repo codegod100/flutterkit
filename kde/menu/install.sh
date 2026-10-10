@@ -51,9 +51,9 @@ if [ -n "$updated" ]; then
   # Plasma keeps compiled QML around; drop it so the new files are what
   # loads, then restart the shell.
   rm -rf "${XDG_CACHE_HOME:-$HOME/.cache}/plasmashell/qmlcache"
-  if systemctl --user restart plasma-plasmashell 2>/dev/null; then
-    echo "Updated and restarted Plasma."
-  elif command -v kquitapp6 >/dev/null && command -v kstart >/dev/null; then
+  # kquitapp6 + kstart is what reliably restarts the shell; restarting the
+  # systemd unit can leave the old shell running.
+  if command -v kquitapp6 >/dev/null && command -v kstart >/dev/null; then
     kquitapp6 plasmashell >/dev/null 2>&1 || true
     kstart plasmashell >/dev/null 2>&1 || true
     echo "Updated and restarted Plasma."
