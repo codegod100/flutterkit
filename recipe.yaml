@@ -1,0 +1,16 @@
+package:
+  name: flatkit
+  version: 0.1.0
+
+source:
+  path: .
+
+build:
+  noarch: generic
+  script:
+    - mkdir -p $PREFIX/share/flatkit
+    - cp -r pubspec.yaml analysis_options.yaml lib $PREFIX/share/flatkit/
+
+about:
+  homepage: https://github.com/codegod100/flutterkit
+  summary: Flat Flutter widgets with instant feedback and no ripples, highlights or animated menus.

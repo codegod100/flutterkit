@@ -1,0 +1,14 @@
+# Lets pixi workspaces depend on flatkit. Installing it puts the Dart
+# package (pubspec.yaml and lib/) at $CONDA_PREFIX/share/flatkit, which a
+# Flutter app's pubspec then uses as a path dependency.
+[workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64", "linux-aarch64", "osx-64", "osx-arm64", "win-64"]
+preview = ["pixi-build"]
+
+[package]
+name = "flatkit"
+version = "0.1.0"
+
+[package.build]
+backend = { name = "pixi-build-rattler-build", version = "*" }
