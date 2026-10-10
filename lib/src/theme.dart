@@ -94,6 +94,21 @@ class KitColors {
 const kitRadius = 6.0;
 const kitControlHeight = 30.0;
 
+/// Inter, bundled with the kit. It is drawn for screens, with a tall
+/// x-height and open shapes, so small UI text stays sharp where the
+/// platform fallback font looks soft.
+const kitFontFamily = 'Inter';
+const kitFontPackage = 'flatkit';
+
+/// The kit's base text style: Inter at 14px with no extra letter spacing.
+const kitTextStyle = TextStyle(
+  fontFamily: kitFontFamily,
+  package: kitFontPackage,
+  fontSize: 14,
+  height: 1.4,
+  letterSpacing: 0,
+);
+
 /// Makes [KitColors] available below it.
 class KitTheme extends InheritedWidget {
   final KitColors colors;
@@ -107,9 +122,20 @@ class KitTheme extends InheritedWidget {
 
   /// A Material theme with every splash, highlight, hover overlay and page
   /// transition turned off, for whatever Material pieces remain (text
-  /// fields, scrollbars).
-  static ThemeData material(KitColors c) => ThemeData(
+  /// fields, scrollbars). Text uses [kitTextStyle].
+  static ThemeData material(KitColors c) {
+    final base = _material(c);
+    return base.copyWith(
+      textTheme: base.textTheme.copyWith(
+        bodyMedium: base.textTheme.bodyMedium!.merge(kitTextStyle),
+      ),
+    );
+  }
+
+  static ThemeData _material(KitColors c) => ThemeData(
         brightness: c.brightness,
+        fontFamily: kitFontFamily,
+        package: kitFontPackage,
         colorScheme: ColorScheme.fromSeed(
           seedColor: c.accent,
           brightness: c.brightness,

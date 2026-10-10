@@ -9,7 +9,7 @@ build:
   noarch: generic
   script:
     - mkdir -p $PREFIX/share/flatkit
-    - cp -r pubspec.yaml analysis_options.yaml lib $PREFIX/share/flatkit/
+    - cp -r pubspec.yaml analysis_options.yaml lib fonts $PREFIX/share/flatkit/
 
 about:
   homepage: https://github.com/codegod100/flutterkit

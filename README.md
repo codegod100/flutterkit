@@ -22,6 +22,9 @@ close in a single frame.
 Colours come from `KitTheme` (`KitColors.light` and `KitColors.dark`).
 `KitTheme.material(colors)` gives a `ThemeData` with splashes, highlights
 and page transitions turned off for anything Material left in your app.
+It also sets the text font to Inter, which ships with the kit: it stays
+sharp at small sizes where the platform fallback font can look soft. Use
+`kitTextStyle` for the same style outside a Material theme.
 
 ```dart
 MaterialApp(

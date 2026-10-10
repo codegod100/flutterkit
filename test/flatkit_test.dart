@@ -207,4 +207,18 @@ void main() {
     expect(find.text('Hello'), findsNothing);
     await mouse.removePointer();
   });
+
+  testWidgets('body text uses the bundled Inter font', (tester) async {
+    late TextStyle body;
+    await tester.pumpWidget(MaterialApp(
+      theme: KitTheme.material(KitColors.dark),
+      home: Material(child: Builder(builder: (context) {
+        body = KitText.body(context);
+        return const SizedBox();
+      })),
+    ));
+    expect(body.fontFamily, 'packages/flatkit/Inter');
+    expect(body.letterSpacing, 0);
+    expect(body.fontSize, 14);
+  });
 }
