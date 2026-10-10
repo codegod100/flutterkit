@@ -22,13 +22,16 @@ if [ "${1:-}" = "--uninstall" ]; then
   exit 0
 fi
 
-if "$kpackage" -t Plasma/Applet --show "$id" >/dev/null 2>&1; then
-  "$kpackage" -t Plasma/Applet --upgrade package
-  updated=1
-else
-  "$kpackage" -t Plasma/Applet --install package
-  updated=""
-fi
+# Copy the package in place ourselves (what kpackagetool6 does), so an
+# update always replaces every file.
+dest="${XDG_DATA_HOME:-$HOME/.local/share}/plasma/plasmoids/$id"
+updated=""
+[ -d "$dest" ] && updated=1
+rm -rf "$dest"
+mkdir -p "$dest"
+cp -r package/. "$dest/"
+version=$(sed -n 's/.*"Version": "\(.*\)".*/\1/p' "$dest/metadata.json")
+echo "Flatkit Menu $version is in $dest"
 
 # The standalone launcher's installer (launcher/install.sh --meta) points
 # the Meta key straight at that app. Hand Meta back to Plasma so it opens
@@ -57,7 +60,6 @@ if [ -n "$updated" ]; then
   else
     echo "Updated. Log out and back in to load the new version."
   fi
-  echo "Installed version: $(sed -n 's/.*"Version": "\(.*\)".*/\1/p' package/metadata.json)"
 else
   echo "Installed. Right-click your application menu → Show Alternatives… → Flatkit Menu."
 fi
