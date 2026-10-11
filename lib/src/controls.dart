@@ -317,6 +317,16 @@ class KitTextField extends StatefulWidget {
   /// When false the field shows its text but can't be focused or edited.
   final bool enabled;
 
+  /// The on-screen keyboard to show, such as [TextInputType.url] for addresses.
+  final TextInputType? keyboardType;
+
+  /// When false the keyboard doesn't correct words or turn dashes and quotes into typographic ones.
+  final bool autocorrect;
+
+  /// When false the keyboard shows no word suggestions, so it also doesn't add its own spaces (after a period, for
+  /// example). Turn it off for addresses, usernames and codes.
+  final bool enableSuggestions;
+
   const KitTextField({
     super.key,
     required this.controller,
@@ -331,6 +341,9 @@ class KitTextField extends StatefulWidget {
     this.trailing,
     this.obscureText = false,
     this.enabled = true,
+    this.keyboardType,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
   });
 
   @override
@@ -395,6 +408,11 @@ class _KitTextFieldState extends State<KitTextField> {
                 autofocus: widget.autofocus,
                 obscureText: widget.obscureText,
                 enabled: widget.enabled,
+                keyboardType: widget.keyboardType,
+                autocorrect: widget.autocorrect,
+                enableSuggestions: widget.enableSuggestions,
+                smartDashesType: widget.autocorrect ? null : SmartDashesType.disabled,
+                smartQuotesType: widget.autocorrect ? null : SmartQuotesType.disabled,
                 style: widget.enabled ? style : style.copyWith(color: c.textDim),
                 cursorColor: c.accent,
                 cursorWidth: 1.5,
