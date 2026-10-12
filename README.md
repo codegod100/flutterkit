@@ -71,7 +71,7 @@ windows around a flatkit app look like part of it. See
 Muse Code, a GUI for Meta's Muse Code built with the kit (projects with an
 orchestrator thread whose Muse subagents show up as worker threads), now
 lives in its own repository:
-[codegod100/muse-code](https://github.com/codegod100/muse-code).
+[nandi-conda/muse-code](https://github.com/nandi-conda/muse-code).
 
 ## Plasma menu
 
