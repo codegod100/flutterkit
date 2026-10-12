@@ -68,11 +68,10 @@ windows around a flatkit app look like part of it. See
 
 ## Muse Code
 
-`apps/muse_code` is a GUI for Meta's Muse Code built with the kit: projects
-with an orchestrator thread whose Muse subagents show up as worker threads.
-Muse runs in the cloud behind a small relay, with the project's git repos.
-See
-[apps/muse_code/README.md](apps/muse_code/README.md).
+Muse Code, a GUI for Meta's Muse Code built with the kit (projects with an
+orchestrator thread whose Muse subagents show up as worker threads), now
+lives in its own repository:
+[codegod100/muse-code](https://github.com/codegod100/muse-code).
 
 ## Plasma menu
 
