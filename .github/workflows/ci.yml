@@ -31,6 +31,12 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
+      - name: Relay
+        working-directory: apps/muse_code/relay
+        run: |
+          dart pub get
+          dart analyze
+          dart test
 
   pixi:
     runs-on: ubuntu-latest
