@@ -1,4 +1,6 @@
 analyzer:
   exclude:
     - build/**
+    # The example app is analyzed on its own, with its own dependencies.
+    - apps/**
 include: package:flutter_lints/flutter.yaml

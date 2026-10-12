@@ -66,6 +66,13 @@ Neither touches `dart:io` on the web, so apps using them still build with
 windows around a flatkit app look like part of it. See
 [kde/aurorae/README.md](kde/aurorae/README.md) to install them.
 
+## Muse Code
+
+`apps/muse_code` is a desktop coding assistant built with the kit: projects
+with an orchestrator thread that hands work to worker threads, which edit
+and test code in the project folder. See
+[apps/muse_code/README.md](apps/muse_code/README.md).
+
 ## Plasma menu
 
 Flatkit Menu, a Plasma 6 application menu in the kit's style that replaces
