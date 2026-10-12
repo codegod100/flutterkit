@@ -236,4 +236,34 @@ void main() {
     expect(body.letterSpacing, 0);
     expect(body.fontSize, 14);
   });
+
+  test('Material text uses the kit text colour, not one tinted by the accent', () {
+    const pinkish = KitColors(
+      brightness: Brightness.dark,
+      background: Color(0xFF202326),
+      surface: Color(0xFF292C30),
+      hover: Color(0xFF33363A),
+      pressed: Color(0xFF3C3F43),
+      border: Color(0xFF484A4D),
+      borderStrong: Color(0xFF606366),
+      text: Color(0xFFFCFCFC),
+      textDim: Color(0xFFA1A9B1),
+      accent: Color(0xFFE88A9A),
+      accentHover: Color(0xFFEA9AA8),
+      accentPressed: Color(0xFFECAAB5),
+      onAccent: Color(0xFF000000),
+      danger: Color(0xFFDA4453),
+      dangerHover: Color(0xFFDE5866),
+      onDanger: Color(0xFFFFFFFF),
+      success: Color(0xFF27AE60),
+      focus: Color(0xFFE88A9A),
+      shadow: Color(0x66000000),
+    );
+    for (final c in [KitColors.light, KitColors.dark, pinkish]) {
+      final theme = KitTheme.material(c);
+      expect(theme.textTheme.bodyMedium!.color, c.text);
+      expect(theme.textTheme.titleMedium!.color, c.text);
+      expect(theme.colorScheme.onSurface, c.text);
+    }
+  });
 }

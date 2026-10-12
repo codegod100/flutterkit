@@ -125,10 +125,11 @@ class KitTheme extends InheritedWidget {
   /// fields, scrollbars). Text uses [kitTextStyle].
   static ThemeData material(KitColors c) {
     final base = _material(c);
+    // Text takes the kit's colours, not the tinted ones a seeded colour
+    // scheme derives from the accent.
+    final text = base.textTheme.apply(bodyColor: c.text, displayColor: c.text);
     return base.copyWith(
-      textTheme: base.textTheme.copyWith(
-        bodyMedium: base.textTheme.bodyMedium!.merge(kitTextStyle),
-      ),
+      textTheme: text.copyWith(bodyMedium: text.bodyMedium!.merge(kitTextStyle)),
     );
   }
 
@@ -140,8 +141,14 @@ class KitTheme extends InheritedWidget {
           seedColor: c.accent,
           brightness: c.brightness,
           primary: c.accent,
+          onPrimary: c.onAccent,
           error: c.danger,
+          onError: c.onDanger,
           surface: c.surface,
+          onSurface: c.text,
+          onSurfaceVariant: c.textDim,
+          outline: c.borderStrong,
+          outlineVariant: c.border,
         ),
         scaffoldBackgroundColor: c.background,
         canvasColor: c.background,
