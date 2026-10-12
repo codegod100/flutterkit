@@ -24,17 +24,6 @@ in Main as a report card and the orchestrator carries on.
   (`~/.config/muse_code/state.json` on Linux) and replays anything it missed
   from Muse when it reconnects.
 
-## Download
-
-- Desktop builds (Linux, macOS, Windows): the
-  [`muse-code-latest` release](https://github.com/codegod100/flutterkit/releases/tag/muse-code-latest).
-  The macOS app is unsigned: right-click it and choose Open the first time.
-- Web: <https://codegod100.github.io/flutterkit/>
-
-Both are rebuilt on every push to main by
-`.github/workflows/muse-code-release.yml`. Open Settings and enter the relay
-URL and relay token to connect.
-
 ## How it fits together
 
 ```
