@@ -31,3 +31,8 @@ analyzer:
   exclude:
     # The relay is its own Dart package with its own analysis.
     - relay/**
+    - build/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
