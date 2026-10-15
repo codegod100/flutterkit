@@ -62,9 +62,9 @@ Neither touches `dart:io` on the web, so apps using them still build with
 
 ### Matching window decorations
 
-`kde/aurorae` has KWin title bars in the same style, light and dark, so
-windows around a flatkit app look like part of it. See
-[kde/aurorae/README.md](kde/aurorae/README.md) to install them.
+Flatkit Aurorae themes give KWin title bars in the same style, light and
+dark, so windows around a flatkit app look like part of it. They now live in
+[codegod100/kde](https://github.com/codegod100/kde/tree/main/aurorae).
 
 ## Muse Code
 
